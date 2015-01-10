@@ -1,4 +1,4 @@
-# Created by .ignore support plugin (hsz.mobi)
 .DS_Store
-public/vendors
 node_modules
+data
+public/vendors
