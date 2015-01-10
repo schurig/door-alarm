@@ -1,0 +1,23 @@
+{
+  "name": "door-alert",
+  "version": "0.0.0",
+  "description": "Tracking the door and sending alerts when it opens.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "door",
+    "track",
+    "alarm"
+  ],
+  "author": "Martin Schurig <martin@schurig.pw>",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.10.0",
+    "express": "^4.10.4",
+    "http-auth": "^2.2.4",
+    "moment": "^2.8.4",
+    "pushover-notifications": "^0.2.2"
+  }
+}

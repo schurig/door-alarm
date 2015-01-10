@@ -1,0 +1,146 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Alarm Board</title>
+
+    <link rel="stylesheet" href="vendors/foundation/css/normalize.css">
+    <link rel="stylesheet" href="vendors/foundation/css/foundation.css">
+    <link rel="stylesheet" href="vendors/foundation-icon-fonts/foundation-icons.css">
+    <link rel="stylesheet" href="styles/main.css">
+  </head>
+  <body ng-app="door.alarm">
+    <nav class="top-bar" data-topbar role="navigation">
+      <ul class="title-area">
+        <li class="name">
+          <h1><a href="#">Door Alarm System</a></h1>
+        </li>
+      </ul>
+    </nav>
+
+    <main class="panel" ng-controller="settingsController">
+      <div class="row">
+        <div class="small-12 columns">
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="alarm" class="right inline">Alarm</label>
+            </div>
+            <div class="small-9 columns">
+              <div class="switch alert">
+                <input ng-click="update()" id="alarm" ng-model="settings.alarm" type="checkbox">
+                <label for="alarm"></label>
+              </div>
+            </div>
+          </div>
+          <div ng-show="settings.alarm" class="row">
+            <div class="small-3 columns">
+              <label for="sound" class="right inline">Sound</label>
+            </div>
+            <div class="small-9 columns">
+              <div class="switch">
+                <input ng-disable="!settings.alarm" ng-click="update()" id="sound" ng-model="settings.sound" type="checkbox">
+                <label for="sound"></label>
+              </div>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="email" class="right inline">Email Notification</label>
+            </div>
+            <div class="small-9 columns">
+              <div class="switch">
+                <input ng-click="update()" id="email" ng-model="settings.email" type="checkbox">
+                <label for="email"></label>
+              </div>
+            </div>
+          </div>
+
+          <div ng-show="settings.email" class="row">
+            <div class="small-3 columns">
+              <label for="emails" class="right inline">E-Mails</label>
+            </div>
+            <div class="small-9 columns">
+              <div ng-repeat="email in settings.emails">
+
+                <div class="row collapse">
+                  <div class="small-11 columns">
+                    <input disabled type="text" ng-model="settings.emails[$index]" placeholder="email@domain.tld">
+                  </div>
+                  <div class="small-1 columns">
+                    <a href="" ng-click="removeEmail($index)" class="button prefix"><i class="fi-x"></i></a>
+                  </div>
+                </div>
+                <hr ng-show="$last">
+              </div>
+              <form ng-submit="pushEmail()">
+                <input type="text" ng-model="tmp.newEmail" placeholder="email@domain.tld">
+              </form>
+            </div>
+          </div>
+
+          <hr>
+
+          <div class="row">
+            <div class="small-3 columns">
+              <label for="pushes" class="right inline">Push Notification</label>
+            </div>
+            <div class="small-9 columns">
+              <div class="switch">
+                <input ng-click="update()" id="pushes" ng-model="settings.pushes" type="checkbox">
+                <label for="pushes"></label>
+              </div>
+            </div>
+          </div>
+
+          <div ng-show="settings.pushes" class="row">
+            <div class="small-3 columns">
+              <label for="devices" class="right inline">Devices</label>
+            </div>
+
+            <div class="small-9 columns">
+              <div ng-repeat="device in settings.devices">
+
+                <div class="row collapse">
+                  <div class="small-11 columns">
+                    <input disabled type="text" ng-model="settings.devices[$index].name" placeholder="Name">
+                  </div>
+                  <div class="small-1 columns">
+                    <a href="" ng-click="removeDevice($index)" class="button prefix"><i class="fi-x"></i></a>
+                  </div>
+                </div>
+                <hr ng-show="$last">
+              </div>
+              <form ng-submit="pushDevice()">
+                <label for="deviceName" class="right inline">Name</label>
+                <input type="text" id="deviceName" ng-model="tmp.newDevice.name" placeholder="Devices Name">
+
+                <label for="deviceName" class="right inline">Token</label>
+                <input type="text" id="deviceToken" ng-model="tmp.newDevice.token" placeholder="Token here">
+
+                <label for="deviceName" class="right inline">User</label>
+                <input type="text" id="deviceUser" ng-model="tmp.newDevice.user" placeholder="User ID here">
+
+                <input type="submit" value="Add Device" class="button prefix">
+              </form>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <pre>{{ settings }}</pre>
+      <pre>{{ tmp.newDevice }}</pre>
+    </main>
+
+    <script src="vendors/angular/angular.js"></script>
+
+    <script src="scripts/module.js"></script>
+
+    <script src="scripts/services/settingService.js"></script>
+    <script src="scripts/controllers/settingsController.js"></script>
+  </body>
+</html>
