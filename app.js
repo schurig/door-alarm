@@ -1,13 +1,52 @@
-var fs = require('fs');
-var express = require('express');
-var bodyParser = require('body-parser');
-var moment = require('moment');
-var push = require( 'pushover-notifications' );
-var platform = require('os').platform;
-var exec = require('child_process').exec;
-var app = express();
-var auth = require('http-auth');
+var gpio = require('pi-gpio'),
+    fs = require('fs'),
+    express = require('express'),
+    moment = require('moment'),
+    push = require( 'pushover-notifications'),
+    platform = require('os').platform,
+    exec = require('child_process').exec,
+    auth = require('http-auth');
 
+
+var settings = {
+  pin: 12,
+  delay: 1000,
+  doorClosed: true
+};
+
+var doorInit = function init() {
+  gpio.open(settings.pin, "input pullup", function(err) {
+    if(err) {
+      if(err.code == 4) {
+        gpio.close(settings.pin);
+        doorInit();
+        return false;
+      } else { throw err; }
+    } doorCheck();
+  });
+};
+
+var doorCheck = function check() {
+  gpio.read(settings.pin, function(err, value) {
+    if(settings.doorClosed != value) {
+      settings.doorClosed = value;
+      if(settings.doorClosed) {
+        console.log('door closed');
+      } else {
+        if (getSettings().alarm) {
+          if (getSettings().sound) { playSound(); }
+          if (getSettings().email) { sendEmail(); }
+          if (getSettings().pushes) { sendPushes(); }
+        }
+        console.log('Door opened!');
+      }
+    }
+  }); setTimeout(doorCheck, settings.delay);
+};
+
+doorInit();
+
+var app = express();
 var basic = auth.basic({
   realm: 'Hi Martin!',
   file: __dirname + '/data/users.htpasswd'
@@ -19,7 +58,6 @@ var soundFile = __dirname + '/sounds/alarm.mp3';
 var databaseFile = __dirname + '/data/data.json';
 var databaseCache = false;
 
-app.use(bodyParser());
 app.use(express.static(__dirname + '/public'));
 
 // Routes
@@ -39,33 +77,6 @@ app.post('/api/settings', function(req, res) {
     databaseCache = JSON.stringify(settingsObj);
     res.send('saved!');
   });
-});
-
-// Door actions
-app.post('/opened', function(req, res) {
-  if(!validateKey(req.body.key)) {
-    res.send('not valid!');
-    return false;
-  }
-
-  if (getSettings().alarm) {
-    if (getSettings().sound) { playSound(); }
-    if (getSettings().email) { sendEmail(); }
-    if (getSettings().pushes) { sendPushes(); }
-  }
-
-  console.log('Door opened!');
-  res.send('1337');
-});
-
-app.post('/closed', function(req, res) {
-  if(!validateKey(req.body.key)) {
-    res.send('not valid!');
-    return false;
-  }
-
-  console.log('Door closed!');
-  res.send('1337');
 });
 
 
@@ -89,27 +100,12 @@ var getSettings = function getSettings() {
   return JSON.parse(databaseCache).settings;
 };
 
-var validateKey = function validateKey(key) {
-  if(key == 'xxxxxxxxxxxxxxCHANGEME_EVERYWHERExxxxxxxxxxxxxxxxxxxxx') {
-    return true;
-  }
-  return false;
-};
-
 var playSound = function playSound() {
   if(platform() == 'linux') {
     exec("omxplayer " + soundFile, function (error) {
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
+      if (error !== null) { console.log('exec error: ' + error); }
     });
-  } else if(platform() == 'darwin') {
-    exec("say \"Door opened!\"", function (error) {
-      if (error !== null) {
-        console.log('exec error: ' + error);
-      }
-    });
-  }
+  } else { console.log('not on linux'); }
 };
 
 var sendEmail = function sendEmail() {
@@ -147,11 +143,9 @@ var sendPushes = function sendPushes() {
 };
 
 var server = app.listen(80, function () {
-
   var host = server.address().address;
   var port = server.address().port;
-
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('Door-Alarm app is listening at http://%s:%s', host, port);
 });
 
 initDatabase();
