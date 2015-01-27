@@ -1,6 +1,7 @@
 var gpio = require('pi-gpio'),
     fs = require('fs'),
     express = require('express'),
+    bodyParser = require('body-parser'),
     moment = require('moment'),
     push = require( 'pushover-notifications'),
     platform = require('os').platform,
@@ -52,6 +53,7 @@ var basic = auth.basic({
   file: __dirname + '/data/users.htpasswd'
 });
 
+app.use(bodyParser());
 app.use(auth.connect(basic));
 
 var soundFile = __dirname + '/sounds/alarm.mp3';

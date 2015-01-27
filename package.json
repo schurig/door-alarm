@@ -14,6 +14,7 @@
   "author": "Martin Schurig <martin@schurig.pw>",
   "license": "MIT",
   "dependencies": {
+    "body-parser": "^1.10.2",
     "express": "^4.10.4",
     "http-auth": "^2.2.4",
     "moment": "^2.8.4",
