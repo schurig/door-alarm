@@ -1,0 +1,14 @@
+{
+  "webinterface": {
+    "username": "ms",
+    "password:": "password"
+  },
+  "doorchecker": {
+    "pin": 12,
+    "delay": 500
+  },
+  "mailserver": {
+    "hostname": "hostname",
+    "port": "port"
+  }
+}
