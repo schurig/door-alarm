@@ -28,7 +28,7 @@ Run the server with
 
 - [x] pushover notifications
 - [x] playing sounds
-- [ ] email notifications #1
+- [ ] email notifications [#1](/../../issues/1)
 - [ ] pushbullet notifications
 - [ ] web-interface log
 - [ ] Piwik/Google Analytics support
