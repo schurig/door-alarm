@@ -40,6 +40,7 @@ Run the server with
 * make installation and setup easier
 * better configuration and database management
 * refactor code
+* write tests!!!!!!!11
 
 
 ## Maintainer
