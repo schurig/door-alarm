@@ -44,9 +44,10 @@ Run the server with
 * write tests!!!!!!!11
 
 
-## Maintainer
+## Maintainers
 
 * Martin Schurig (https://github.com/schurig)
+* Pascal Weiland (https://github.com/weiland)
 
 
 ## Contributing
