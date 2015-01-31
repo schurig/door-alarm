@@ -26,9 +26,9 @@ Run the server with
 
 ## What it supports:
 
-- [x] email notifications
 - [x] pushover notifications
 - [x] playing sounds
+- [ ] email notifications #1
 - [ ] pushbullet notifications
 - [ ] web-interface log
 - [ ] Piwik/Google Analytics support
