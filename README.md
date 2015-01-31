@@ -1,4 +1,4 @@
-# Simple door-alarm system for Raspberry Pi
+# Door Alarm System for your Raspberry Pi
 
 Get notified when your door opens.
 
