@@ -35,6 +35,7 @@ Run the server with
 ## TODO
 
 * make installation and setup easier
+* better configuration and database management
 * refactor code
 
 
