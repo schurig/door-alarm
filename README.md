@@ -1,18 +1,18 @@
-# Simple door alarm system for Raspberry Pi
+# Simple door-alarm system for Raspberry Pi
 
 Get notified when your door opens.
 
 ## Installation
 
-Clone the project
+```bash
+# clone this repository
+git clone https://github.com/schurig/door-alarm.git
+cd door-alarm
 
-    git clone git@github.com:schurig/door-alarm.git
-
-
-And then execute:
-
-    $ bower install
-    $ npm install
+# install node and bower dependencies
+npm install
+bower install
+```
 
 
 ## Usage
@@ -24,12 +24,12 @@ Run the server with
 
 ## What it supports:
 
-[x] email notifications
-[x] pushover notifications
-[x] playing sounds
-[] pushbullet notifications
-[] web-interface log
-[] web hooks
+- [x] email notifications
+- [x] pushover notifications
+- [x] playing sounds
+- [ ] pushbullet notifications
+- [ ] web-interface log
+- [ ] web hooks
 
 
 ## TODO
