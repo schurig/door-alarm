@@ -1,6 +1,6 @@
 # Door Alarm System for your Raspberry Pi
 
-Get notifications when your door opens.
+Get notifications every time your door opens.
 
 **Want to help? [Feel free to push this project forward :)](#contributing)**
 
@@ -33,6 +33,7 @@ Run the server with
 - [ ] web-interface log
 - [ ] Piwik/Google Analytics support
 - [ ] web hooks
+- [ ] set certain periods of time/ rules for notifications
 
 
 ## TODO
