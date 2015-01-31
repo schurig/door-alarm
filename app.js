@@ -3,10 +3,8 @@ var gpio = require('pi-gpio'),
     express = require('express'),
     bodyParser = require('body-parser'),
     moment = require('moment'),
-    push = require( 'pushover-notifications'),
-    platform = require('os').platform,
-    exec = require('child_process').exec,
-    auth = require('http-auth');
+    auth = require('http-auth'),
+    notifiers = require('./modules/notifiers');
 
 
 var settings = {
@@ -14,6 +12,24 @@ var settings = {
   delay: 1000,
   doorClosed: true
 };
+
+var app = express();
+var basic = auth.basic({
+  realm: 'Hi Martin!',
+  file: __dirname + '/data/users.htpasswd'
+});
+
+app.use(bodyParser());
+app.use(auth.connect(basic));
+
+var soundFile = __dirname + '/sounds/alarm.mp3';
+var databaseFile = __dirname + '/data/data.json';
+var databaseCache = false;
+
+app.use(express.static(__dirname + '/public'));
+
+
+
 
 var doorInit = function init() {
   gpio.open(settings.pin, "input pullup", function(err) {
@@ -35,9 +51,15 @@ var doorCheck = function check() {
         console.log('door closed');
       } else {
         if (getSettings().alarm) {
-          if (getSettings().sound) { playSound(); }
-          if (getSettings().email) { sendEmail(); }
-          if (getSettings().pushes) { sendPushes(); }
+          if (getSettings().sound) {
+            notifiers.playSound(soundFile);
+          }
+          if (getSettings().email) {
+            notifiers.sendEmails(getSettings().emails, getCurrentTime());
+          }
+          if (getSettings().pushes) {
+            notifiers.sendPushes(getSettings().devices, getCurrentTime());
+          }
         }
         console.log('Door opened!');
       }
@@ -46,21 +68,6 @@ var doorCheck = function check() {
 };
 
 doorInit();
-
-var app = express();
-var basic = auth.basic({
-  realm: 'Hi Martin!',
-  file: __dirname + '/data/users.htpasswd'
-});
-
-app.use(bodyParser());
-app.use(auth.connect(basic));
-
-var soundFile = __dirname + '/sounds/alarm.mp3';
-var databaseFile = __dirname + '/data/data.json';
-var databaseCache = false;
-
-app.use(express.static(__dirname + '/public'));
 
 // Routes
 app.get('/api/settings', function(req, res) {
@@ -100,48 +107,6 @@ var getCurrentTime = function getCurrentTime() {
 
 var getSettings = function getSettings() {
   return JSON.parse(databaseCache).settings;
-};
-
-var playSound = function playSound() {
-  if(platform() == 'linux') {
-    exec("omxplayer " + soundFile, function (error) {
-      if (error !== null) { console.log('exec error: ' + error); }
-    });
-  } else { console.log('not on linux'); }
-};
-
-var sendEmail = function sendEmail() {
-  var emails = getSettings().emails;
-  console.log('lets send some emails!');
-};
-
-var sendPushes = function sendPushes() {
-  var devices = getSettings().devices;
-
-  var preparedPushes = [];
-  var msg = {
-    message: 'at ' + getCurrentTime(),
-    title: "Door Opened",
-    sound: 'magic',
-    priority: 1
-  };
-
-  for (i = 0; i < devices.length; i++) {
-    preparedPushes[i] = new push( {
-      user: devices[i].user,
-      token: devices[i].token
-    });
-  }
-
-  for (i = 0; i < preparedPushes.length; i++) {
-    preparedPushes[i].send(msg, function(err, result) {
-      if ( err ) {
-        throw err;
-      }
-
-      console.log( result );
-    });
-  }
 };
 
 var server = app.listen(80, function () {
