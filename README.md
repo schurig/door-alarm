@@ -46,7 +46,7 @@ Run the server with
 
 ## Maintainers
 
-* Martin Schurig (https://github.com/schurig)
+* Martin Schurig (https://github.com/schurig, https://martinschurig.com)
 * Pascal Weiland (https://github.com/weiland)
 
 
