@@ -2,7 +2,7 @@
 
 Get notifications every time your door opens.
 
-**Want to help? [Feel free to push this project forward :)](#contributing)**
+**Want to help? [Feel free to push this project forward :)](#)contributing**
 
 ## Installation
 
